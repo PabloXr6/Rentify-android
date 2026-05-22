@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/nav_graph_main"
+    app:startDestination="@id/homeFragment">
+
+    <fragment
+        android:id="@+id/homeFragment"
+        android:name="com.example.rentify.ui.home.HomeFragment"
+        android:label="Home" />
+
+    <fragment
+        android:id="@+id/favoritesFragment"
+        android:name="com.example.rentify.ui.favorites.FavoritesFragment"
+        android:label="Favorites" />
+
+    <fragment
+        android:id="@+id/exploreFragment"
+        android:name="com.example.rentify.ui.explore.ExploreFragment"
+        android:label="Explore" />
+
+    <fragment
+        android:id="@+id/profileFragment"
+        android:name="com.example.rentify.ui.profile.ProfileFragment"
+        android:label="Profile" />
+
+</navigation>
