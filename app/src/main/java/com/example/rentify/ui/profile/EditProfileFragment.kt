@@ -7,38 +7,31 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
-import com.example.rentify.R
-import com.example.rentify.databinding.FragmentProfileBinding
+import com.example.rentify.databinding.FragmentEditProfileBinding
 
-class ProfileFragment : Fragment() {
+class EditProfileFragment : Fragment() {
 
-    private var _binding: FragmentProfileBinding? = null
+    private var _binding: FragmentEditProfileBinding? = null
     private val binding get() = _binding!!
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        _binding = FragmentProfileBinding.inflate(inflater, container, false)
+        _binding = FragmentEditProfileBinding.inflate(inflater, container, false)
         return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        // Navigasi ke Edit Profile
-        binding.tvMenuEditProfile.setOnClickListener {
-            findNavController().navigate(R.id.editProfileFragment)
+        binding.btnBackEdit.setOnClickListener {
+            findNavController().navigateUp()
         }
 
-        // Navigasi ke Settings
-        binding.tvMenuSettings.setOnClickListener {
-            findNavController().navigate(R.id.settingsFragment)
-        }
-
-        // Tombol Logout
-        binding.btnLogout.setOnClickListener {
-            Toast.makeText(requireContext(), "Logout ditekan!", Toast.LENGTH_SHORT).show()
+        binding.btnSaveProfile.setOnClickListener {
+            Toast.makeText(requireContext(), "Profile updated!", Toast.LENGTH_SHORT).show()
+            findNavController().navigateUp() // Langsung kembali setelah save
         }
     }
 
