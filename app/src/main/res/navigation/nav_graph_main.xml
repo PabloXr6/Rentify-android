@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/nav_graph_main"
+    app:startDestination="@id/splashFragment">
+
+    <fragment
+        android:id="@+id/homeFragment"
+        android:name="com.example.rentify.ui.home.HomeFragment"
+        android:label="Home" />
+
+    <fragment
+        android:id="@+id/favoritesFragment"
+        android:name="com.example.rentify.ui.favorites.FavoritesFragment"
+        android:label="Favorites" />
+
+    <fragment
+        android:id="@+id/exploreFragment"
+        android:name="com.example.rentify.ui.explore.ExploreFragment"
+        android:label="Explore" />
+
+    <fragment
+        android:id="@+id/profileFragment"
+        android:name="com.example.rentify.ui.profile.ProfileFragment"
+        android:label="Profile" />
+
+    <fragment
+        android:id="@+id/detailVehicleFragment"
+        android:name="com.example.rentify.ui.detail.DetailVehicleFragment"
+        android:label="Detail Vehicle" />
+
+    <fragment
+        android:id="@+id/detailExploreFragment"
+        android:name="com.example.rentify.ui.detail.DetailExploreFragment"
+        android:label="Detail Explore" />
+
+    <fragment
+        android:id="@+id/editProfileFragment"
+        android:name="com.example.rentify.ui.profile.EditProfileFragment"
+        android:label="Edit Profile" />
+
+    <fragment
+        android:id="@+id/settingsFragment"
+        android:name="com.example.rentify.ui.profile.SettingsFragment"
+        android:label="Settings" />
+
+    <fragment
+        android:id="@+id/splashFragment"
+        android:name="com.example.rentify.ui.auth.SplashFragment"
+        android:label="Splash" >
+        <action
+            android:id="@+id/action_splash_to_signin"
+            app:destination="@id/signInFragment"
+            app:popUpTo="@id/splashFragment"
+            app:popUpToInclusive="true" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/signInFragment"
+        android:name="com.example.rentify.ui.auth.SignInFragment"
+        android:label="Sign In" />
+
+</navigation>
