@@ -1,19 +1,17 @@
 plugins {
     alias(libs.plugins.android.application)
+    kotlin("android") version "1.9.0"
+    kotlin("kapt") version "1.9.0"
 }
 
 android {
     namespace = "com.example.rentify"
-    compileSdk {
-        version = release(36) {
-            minorApiLevel = 1
-        }
-    }
+    compileSdk = 34
 
     defaultConfig {
         applicationId = "com.example.rentify"
         minSdk = 24
-        targetSdk = 36
+        targetSdk = 34
         versionCode = 1
         versionName = "1.0"
 
@@ -63,4 +61,19 @@ dependencies {
 
     // Shimmer loading effect (opsional tapi keren)
     implementation("com.facebook.shimmer:shimmer:0.5.0")
+
+    // Room Database (Local Storage)
+    val roomVersion = "2.6.1"
+    implementation("androidx.room:room-runtime:$roomVersion")
+    implementation("androidx.room:room-ktx:$roomVersion")
+    kapt("androidx.room:room-compiler:$roomVersion")
+
+    // Lifecycle & ViewModel (Architecture MVVM)
+    val lifecycleVersion = "2.7.0"
+    implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:$lifecycleVersion")
+    implementation("androidx.lifecycle:lifecycle-livedata-ktx:$lifecycleVersion")
+
+    // Coroutines (Asynchronous/Background thread)
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.7.3")
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.7.3")
 }
