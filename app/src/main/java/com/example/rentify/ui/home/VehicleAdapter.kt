@@ -6,27 +6,31 @@ import androidx.navigation.findNavController
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
-import com.example.rentify.databinding.ItemVehicleBinding
+import com.bumptech.glide.Glide
 import com.example.rentify.R
+import com.example.rentify.data.remote.Vehicle
+import com.example.rentify.databinding.ItemVehicleBinding
 
-// Data class dummy sementara untuk menampilkan list
-data class DummyCar(val id: Int, val name: String, val price: String, val rating: String)
-
-class VehicleAdapter : ListAdapter<DummyCar, VehicleAdapter.VehicleViewHolder>(DiffCallback()) {
+class VehicleAdapter : ListAdapter<Vehicle, VehicleAdapter.VehicleViewHolder>(DiffCallback()) {
 
     inner class VehicleViewHolder(private val binding: ItemVehicleBinding) :
         RecyclerView.ViewHolder(binding.root) {
 
-        fun bind(car: DummyCar) {
+        fun bind(car: Vehicle) {
             binding.tvCarName.text = car.name
             binding.tvCarPrice.text = car.price
             binding.tvRating.text = car.rating
+            binding.tvTransmission.text = car.transmission
+            binding.tvSeats.text = car.seats
+
+                    Glide.with(binding.root.context)
+                        .load(car.imageUrl)
+                        .centerCrop()
+                        .into(binding.ivCar)
 
             binding.root.setOnClickListener {
                 it.findNavController().navigate(R.id.detailVehicleFragment)
             }
-
-            // Nantinya logika klik tombol favorit dan klik item bisa ditambahkan di sini
         }
     }
 
@@ -39,12 +43,12 @@ class VehicleAdapter : ListAdapter<DummyCar, VehicleAdapter.VehicleViewHolder>(D
         holder.bind(getItem(position))
     }
 
-    class DiffCallback : DiffUtil.ItemCallback<DummyCar>() {
-        override fun areItemsTheSame(oldItem: DummyCar, newItem: DummyCar): Boolean {
+    class DiffCallback : DiffUtil.ItemCallback<Vehicle>() {
+        override fun areItemsTheSame(oldItem: Vehicle, newItem: Vehicle): Boolean {
             return oldItem.id == newItem.id
         }
 
-        override fun areContentsTheSame(oldItem: DummyCar, newItem: DummyCar): Boolean {
+        override fun areContentsTheSame(oldItem: Vehicle, newItem: Vehicle): Boolean {
             return oldItem == newItem
         }
     }

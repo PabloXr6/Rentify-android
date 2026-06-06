@@ -1,7 +1,8 @@
 plugins {
     alias(libs.plugins.android.application)
-    kotlin("android") version "1.9.0"
-    kotlin("kapt") version "1.9.0"
+    alias(libs.plugins.kotlin.android)
+    alias(libs.plugins.kotlin.kapt)
+    alias(libs.plugins.google.gms.google.services)
 }
 
 android {
@@ -28,8 +29,11 @@ android {
         }
     }
     compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_11
-        targetCompatibility = JavaVersion.VERSION_11
+        sourceCompatibility = JavaVersion.VERSION_17
+        targetCompatibility = JavaVersion.VERSION_17
+    }
+    kotlinOptions {
+        jvmTarget = "17"
     }
 
     buildFeatures {
@@ -42,10 +46,13 @@ dependencies {
     implementation(libs.androidx.appcompat)
     implementation(libs.androidx.constraintlayout)
     implementation(libs.androidx.core.ktx)
+    implementation(libs.firebase.auth)
+    implementation(libs.firebase.firestore)
     implementation(libs.material)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.espresso.core)
     androidTestImplementation(libs.androidx.junit)
+    
     // RecyclerView
     implementation("androidx.recyclerview:recyclerview:1.3.2")
 
@@ -76,4 +83,5 @@ dependencies {
     // Coroutines (Asynchronous/Background thread)
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.7.3")
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.7.3")
+    implementation("com.github.bumptech.glide:glide:4.16.0")
 }

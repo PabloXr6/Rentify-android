@@ -8,10 +8,10 @@
             <InsightsFilterSettings>
               <option name="connection">
                 <ConnectionSetting>
-                  <option name="appId" value="PLACEHOLDER" />
-                  <option name="mobileSdkAppId" value="" />
-                  <option name="projectId" value="" />
-                  <option name="projectNumber" value="" />
+                  <option name="appId" value="com.example.rentify" />
+                  <option name="mobileSdkAppId" value="1:1044899708337:android:2f50da4ad8e6c80aa45190" />
+                  <option name="projectId" value="rentify-7cdf4" />
+                  <option name="projectNumber" value="1044899708337" />
                 </ConnectionSetting>
               </option>
               <option name="signal" value="SIGNAL_UNSPECIFIED" />

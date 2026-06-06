@@ -60,4 +60,18 @@
         android:name="com.example.rentify.ui.auth.SignInFragment"
         android:label="Sign In" />
 
+    <fragment
+        android:id="@+id/signInFragment"
+        android:name="com.example.rentify.ui.auth.SignInFragment"
+        android:label="Sign In">
+        <action
+            android:id="@+id/action_signIn_to_signUp"
+            app:destination="@id/signUpFragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/signUpFragment"
+        android:name="com.example.rentify.ui.auth.SignUpFragment"
+        android:label="Sign Up" />
+
 </navigation>

@@ -25,14 +25,11 @@ class MainActivity : AppCompatActivity() {
 
         binding.bottomNavView.setupWithNavController(navController)
 
-        // --- LOGIKA UNTUK MENYEMBUNYIKAN BOTTOM NAV ---
         navController.addOnDestinationChangedListener { _, destination, _ ->
             when (destination.id) {
-                // Jika sedang di halaman Splash atau Sign In, sembunyikan navigasi bawah
-                R.id.splashFragment, R.id.signInFragment -> {
+                R.id.signUpFragment, R.id.splashFragment, R.id.signInFragment -> {
                     binding.bottomNavView.visibility = View.GONE
                 }
-                // Jika di halaman lain (Home, Explore, dll), tampilkan kembali
                 else -> {
                     binding.bottomNavView.visibility = View.VISIBLE
                 }

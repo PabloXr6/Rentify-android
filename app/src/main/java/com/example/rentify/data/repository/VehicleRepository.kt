@@ -1,23 +1,31 @@
 package com.example.rentify.data.repository
 
-import com.example.rentify.data.local.FavoriteVehicleDao
-import com.example.rentify.data.local.VehicleEntity
+import com.example.rentify.data.remote.Vehicle
+import com.google.firebase.firestore.FirebaseFirestore
 
-class VehicleRepository(private val favoriteVehicleDao: FavoriteVehicleDao) {
+class VehicleRepository {
 
-    suspend fun insertFavorite(vehicle: VehicleEntity) {
-        favoriteVehicleDao.insertFavorite(vehicle)
-    }
+    // Panggil Firebase di dalam Repository
+    private val db = FirebaseFirestore.getInstance()
 
-    suspend fun deleteFavorite(vehicle: VehicleEntity) {
-        favoriteVehicleDao.deleteFavorite(vehicle)
-    }
-
-    suspend fun getAllFavorites(): List<VehicleEntity> {
-        return favoriteVehicleDao.getAllFavorites()
-    }
-
-    suspend fun isFavorite(id: Int): Boolean {
-        return favoriteVehicleDao.isFavorite(id)
+    // Fungsi ini akan dipanggil oleh UI (Fragment)
+    fun getVehiclesFromCloud(
+        onSuccess: (List<Vehicle>) -> Unit,
+        onFailure: (Exception) -> Unit
+    ) {
+        db.collection("vehicles").get()
+            .addOnSuccessListener { result ->
+                val vehicleList = mutableListOf<Vehicle>()
+                for (document in result) {
+                    val vehicle = document.toObject(Vehicle::class.java)
+                    vehicleList.add(vehicle)
+                }
+                // Jika sukses, kembalikan daftar mobil/motornya
+                onSuccess(vehicleList)
+            }
+            .addOnFailureListener { exception ->
+                // Jika gagal, kembalikan pesan errornya
+                onFailure(exception)
+            }
     }
 }
