@@ -121,10 +121,11 @@
                 app:tint="#4867D4" />
 
             <TextView
+                android:id="@+id/tv_transmission"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="4dp"
-                android:text="Manual"
+                tools:text="Manual"
                 android:textColor="#9E9E9E"
                 android:textSize="12sp" />
         </LinearLayout>
@@ -146,10 +147,11 @@
                 app:tint="#4867D4" />
 
             <TextView
+                android:id="@+id/tv_seats"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="4dp"
-                android:text="6 Seats"
+                tools:text="6 Seats"
                 android:textColor="#9E9E9E"
                 android:textSize="12sp" />
         </LinearLayout>

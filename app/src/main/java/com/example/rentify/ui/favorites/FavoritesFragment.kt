@@ -6,8 +6,8 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.example.rentify.data.remote.Vehicle
 import com.example.rentify.databinding.FragmentFavoritesBinding
-import com.example.rentify.ui.home.DummyCar
 import com.example.rentify.ui.home.VehicleAdapter
 
 class FavoritesFragment : Fragment() {
@@ -15,7 +15,6 @@ class FavoritesFragment : Fragment() {
     private var _binding: FragmentFavoritesBinding? = null
     private val binding get() = _binding!!
 
-    // Memakai ulang adapter dari HomeFragment
     private lateinit var favoriteAdapter: VehicleAdapter
 
     override fun onCreateView(
@@ -29,26 +28,20 @@ class FavoritesFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        setupRecyclerView()
-        loadDummyFavorites()
-    }
-
-    private fun setupRecyclerView() {
         favoriteAdapter = VehicleAdapter()
         binding.rvFavorites.apply {
             layoutManager = LinearLayoutManager(requireContext())
             adapter = favoriteAdapter
         }
-    }
 
-    private fun loadDummyFavorites() {
-        // Simulasi: Mengambil 2 mobil saja seolah-olah ini adalah mobil yang disukai user
-        val dummyList = listOf(
-            DummyCar(1, "Toyota Avanza", "Rp.400.000 /Day", "4.7"),
-            DummyCar(3, "Toyota Yaris", "Rp.350.000 /Day", "4.8")
+        // List sementara menggunakan format Vehicle yang baru
+        // Nantinya data ini akan ditarik dari Room Database buatan temanmu
+        val dummyFavorites = listOf(
+            Vehicle(id = "1", name = "Toyota Avanza", price = "Rp 400.000 / Hari", rating = "4.7"),
+            Vehicle(id = "2", name = "Honda Brio", price = "Rp 350.000 / Hari", rating = "4.8")
         )
 
-        favoriteAdapter.submitList(dummyList)
+        favoriteAdapter.submitList(dummyFavorites)
     }
 
     override fun onDestroyView() {

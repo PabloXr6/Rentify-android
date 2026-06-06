@@ -10,6 +10,7 @@ import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import com.example.rentify.R
 import com.example.rentify.databinding.FragmentSplashBinding
+import com.google.firebase.auth.FirebaseAuth
 
 class SplashFragment : Fragment() {
     private var _binding: FragmentSplashBinding? = null
@@ -23,21 +24,33 @@ class SplashFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        // Set posisi awal logo di bawah layar (di luar pandangan)
+        // Animasi Logo Rentify
         binding.tvLogoRentify.translationY = 1000f
         binding.tvLogoRentify.alpha = 0f
 
-        // Jalankan Animasi: Geser ke atas (posisi 0) dan munculkan (alpha 1)
         binding.tvLogoRentify.animate()
             .translationY(0f)
             .alpha(1f)
-            .setDuration(1500) // Durasi 1.5 detik
+            .setDuration(1500)
             .setInterpolator(android.view.animation.DecelerateInterpolator())
             .start()
 
-        // Pindah ke halaman Login setelah 3 detik
+        // Tunggu 3 detik, lalu cek status Login
         Handler(Looper.getMainLooper()).postDelayed({
-            findNavController().navigate(R.id.signInFragment)
+            val currentUser = FirebaseAuth.getInstance().currentUser
+
+            if (currentUser != null) {
+                // Jika user sudah login sebelumnya, langsung tembak ke Home
+                findNavController().navigate(R.id.homeFragment)
+            } else {
+                // Jika belum login, arahkan ke halaman Sign In
+                findNavController().navigate(R.id.signInFragment)
+            }
         }, 3000)
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
     }
 }
