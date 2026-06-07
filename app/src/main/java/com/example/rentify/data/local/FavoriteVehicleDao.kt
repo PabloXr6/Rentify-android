@@ -19,5 +19,5 @@ interface FavoriteVehicleDao {
     suspend fun getAllFavorites(): List<VehicleEntity>
 
     @Query("SELECT EXISTS(SELECT 1 FROM favorite_vehicles WHERE id = :id)")
-    suspend fun isFavorite(id: Int): Boolean
+    suspend fun isFavorite(id: String): Boolean
 }

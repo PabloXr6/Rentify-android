@@ -7,10 +7,11 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import com.example.rentify.R
 import com.example.rentify.databinding.FragmentSplashBinding
-import com.google.firebase.auth.FirebaseAuth
+import com.example.rentify.ui.ViewModelFactory
 
 class SplashFragment : Fragment() {
     private var _binding: FragmentSplashBinding? = null
@@ -23,6 +24,10 @@ class SplashFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        // Setup ViewModel
+        val factory = ViewModelFactory.getInstance(requireContext())
+        val viewModel: AuthViewModel by viewModels { factory }
 
         // Animasi Logo Rentify
         binding.tvLogoRentify.translationY = 1000f
@@ -37,9 +42,7 @@ class SplashFragment : Fragment() {
 
         // Tunggu 3 detik, lalu cek status Login
         Handler(Looper.getMainLooper()).postDelayed({
-            val currentUser = FirebaseAuth.getInstance().currentUser
-
-            if (currentUser != null) {
+            if (viewModel.checkLoginSession()) {
                 // Jika user sudah login sebelumnya, langsung tembak ke Home
                 findNavController().navigate(R.id.homeFragment)
             } else {

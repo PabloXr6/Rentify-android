@@ -6,17 +6,15 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import com.example.rentify.R
 import com.example.rentify.databinding.FragmentSigninBinding
-import com.google.firebase.auth.FirebaseAuth
+import com.example.rentify.ui.ViewModelFactory
 
 class SignInFragment : Fragment() {
     private var _binding: FragmentSigninBinding? = null
     private val binding get() = _binding!!
-
-    // Siapkan variabel Firebase Auth
-    private lateinit var auth: FirebaseAuth
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         _binding = FragmentSigninBinding.inflate(inflater, container, false)
@@ -26,8 +24,31 @@ class SignInFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        // Inisialisasi Firebase Auth
-        auth = FirebaseAuth.getInstance()
+        // Setup ViewModel
+        val factory = ViewModelFactory.getInstance(requireContext())
+        val viewModel: AuthViewModel by viewModels { factory }
+
+        // Mengamati status login dari ViewModel
+        viewModel.signInState.observe(viewLifecycleOwner) { state ->
+            when (state) {
+                is AuthResult.Loading -> {
+                    binding.btnLogin.isEnabled = false
+                    // Bisa ditambahkan progress bar jika ada di layout, tapi pastikan tombol disabled dulu
+                }
+                is AuthResult.Success -> {
+                    binding.btnLogin.isEnabled = true
+                    Toast.makeText(requireContext(), "Login Berhasil!", Toast.LENGTH_SHORT).show()
+                    findNavController().navigate(R.id.homeFragment)
+                }
+                is AuthResult.Error -> {
+                    binding.btnLogin.isEnabled = true
+                    Toast.makeText(requireContext(), "Login Gagal: ${state.exception.message}", Toast.LENGTH_SHORT).show()
+                }
+                is AuthResult.Idle -> {
+                    binding.btnLogin.isEnabled = true
+                }
+            }
+        }
 
         // Logika untuk tombol Log in
         binding.btnLogin.setOnClickListener {
@@ -40,18 +61,7 @@ class SignInFragment : Fragment() {
                 return@setOnClickListener
             }
 
-            // Memanggil fungsi Firebase untuk mencocokkan data login
-            auth.signInWithEmailAndPassword(email, password)
-                .addOnCompleteListener(requireActivity()) { task ->
-                    if (task.isSuccessful) {
-                        // Jika cocok, masuk ke halaman Home
-                        Toast.makeText(requireContext(), "Login Berhasil!", Toast.LENGTH_SHORT).show()
-                        findNavController().navigate(R.id.homeFragment)
-                    } else {
-                        // Jika salah password / belum daftar
-                        Toast.makeText(requireContext(), "Login Gagal: Pastikan email/password benar", Toast.LENGTH_SHORT).show()
-                    }
-                }
+            viewModel.signIn(email, password)
         }
 
         // Logika untuk teks "Sign up" (Pindah ke halaman Daftar)

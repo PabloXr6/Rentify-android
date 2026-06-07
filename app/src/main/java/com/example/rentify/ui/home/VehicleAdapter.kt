@@ -29,7 +29,17 @@ class VehicleAdapter : ListAdapter<Vehicle, VehicleAdapter.VehicleViewHolder>(Di
                         .into(binding.ivCar)
 
             binding.root.setOnClickListener {
-                it.findNavController().navigate(R.id.detailVehicleFragment)
+                val bundle = android.os.Bundle().apply {
+                    putString("id", car.id)
+                    putString("name", car.name)
+                    putString("price", car.price)
+                    putString("rating", car.rating)
+                    putString("imageUrl", car.imageUrl)
+                    putString("transmission", car.transmission)
+                    putString("seats", car.seats)
+                    putString("category", car.category)
+                }
+                it.findNavController().navigate(R.id.detailVehicleFragment, bundle)
             }
         }
     }

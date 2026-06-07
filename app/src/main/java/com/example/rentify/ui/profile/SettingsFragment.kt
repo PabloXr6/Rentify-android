@@ -34,7 +34,7 @@ class SettingsFragment : Fragment() {
 
         // Contact Support -> Direct ke WhatsApp Admin Rentify
         binding.tvMenuSupport.setOnClickListener {
-            val phoneNumber = "6281234567890" // Nomor admin
+            val phoneNumber = "6283142646621" // Nomor ayu
             val message = "Halo Admin Rentify, saya butuh bantuan mengenai aplikasi."
             val url = "https://api.whatsapp.com/send?phone=$phoneNumber&text=${Uri.encode(message)}"
 

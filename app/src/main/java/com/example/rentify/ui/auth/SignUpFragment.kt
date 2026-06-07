@@ -6,16 +6,14 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import com.example.rentify.databinding.FragmentSignupBinding
-import com.google.firebase.auth.FirebaseAuth
+import com.example.rentify.ui.ViewModelFactory
 
 class SignUpFragment : Fragment() {
     private var _binding: FragmentSignupBinding? = null
     private val binding get() = _binding!!
-
-    // Variabel untuk memanggil Firebase Auth
-    private lateinit var auth: FirebaseAuth
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         _binding = FragmentSignupBinding.inflate(inflater, container, false)
@@ -25,8 +23,30 @@ class SignUpFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        // Inisialisasi Firebase Auth
-        auth = FirebaseAuth.getInstance()
+        // Setup ViewModel
+        val factory = ViewModelFactory.getInstance(requireContext())
+        val viewModel: AuthViewModel by viewModels { factory }
+
+        // Mengamati status pendaftaran dari ViewModel
+        viewModel.signUpState.observe(viewLifecycleOwner) { state ->
+            when (state) {
+                is AuthResult.Loading -> {
+                    binding.btnRegister.isEnabled = false
+                }
+                is AuthResult.Success -> {
+                    binding.btnRegister.isEnabled = true
+                    Toast.makeText(requireContext(), "Akun berhasil dibuat! Silakan Login", Toast.LENGTH_SHORT).show()
+                    findNavController().navigateUp()
+                }
+                is AuthResult.Error -> {
+                    binding.btnRegister.isEnabled = true
+                    Toast.makeText(requireContext(), "Gagal: ${state.exception.message}", Toast.LENGTH_SHORT).show()
+                }
+                is AuthResult.Idle -> {
+                    binding.btnRegister.isEnabled = true
+                }
+            }
+        }
 
         binding.btnRegister.setOnClickListener {
             val name = binding.etNameSignup.text.toString().trim()
@@ -45,18 +65,7 @@ class SignUpFragment : Fragment() {
                 return@setOnClickListener
             }
 
-            // Memanggil fungsi Firebase untuk mendaftarkan akun baru
-            auth.createUserWithEmailAndPassword(email, password)
-                .addOnCompleteListener(requireActivity()) { task ->
-                    if (task.isSuccessful) {
-                        // Jika sukses, tampilkan pesan dan kembali ke halaman Login
-                        Toast.makeText(requireContext(), "Akun berhasil dibuat! Silakan Login", Toast.LENGTH_SHORT).show()
-                        findNavController().navigateUp()
-                    } else {
-                        // Jika gagal (misal email sudah terdaftar), tampilkan pesan error
-                        Toast.makeText(requireContext(), "Gagal: ${task.exception?.message}", Toast.LENGTH_SHORT).show()
-                    }
-                }
+            viewModel.signUp(name, email, password)
         }
 
         // Teks "Log in" pindah ke halaman Sign In

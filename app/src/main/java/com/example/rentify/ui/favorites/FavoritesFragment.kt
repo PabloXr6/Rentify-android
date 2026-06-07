@@ -5,17 +5,17 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.example.rentify.data.remote.Vehicle
 import com.example.rentify.databinding.FragmentFavoritesBinding
-import com.example.rentify.ui.home.VehicleAdapter
+import com.example.rentify.ui.ViewModelFactory
 
 class FavoritesFragment : Fragment() {
 
     private var _binding: FragmentFavoritesBinding? = null
     private val binding get() = _binding!!
 
-    private lateinit var favoriteAdapter: VehicleAdapter
+    private lateinit var favoriteAdapter: FavoriteAdapter
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -28,20 +28,27 @@ class FavoritesFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        favoriteAdapter = VehicleAdapter()
+        val factory = ViewModelFactory.getInstance(requireContext())
+        val viewModel: FavoriteViewModel by viewModels { factory }
+
+        favoriteAdapter = FavoriteAdapter()
         binding.rvFavorites.apply {
             layoutManager = LinearLayoutManager(requireContext())
             adapter = favoriteAdapter
         }
 
-        // List sementara menggunakan format Vehicle yang baru
-        // Nantinya data ini akan ditarik dari Room Database buatan temanmu
-        val dummyFavorites = listOf(
-            Vehicle(id = "1", name = "Toyota Avanza", price = "Rp 400.000 / Hari", rating = "4.7"),
-            Vehicle(id = "2", name = "Honda Brio", price = "Rp 350.000 / Hari", rating = "4.8")
-        )
+        viewModel.favoritesList.observe(viewLifecycleOwner) { favorites ->
+            favoriteAdapter.submitList(favorites)
+        }
 
-        favoriteAdapter.submitList(dummyFavorites)
+        viewModel.getAllFavorites()
+    }
+
+    override fun onResume() {
+        super.onResume()
+        val factory = ViewModelFactory.getInstance(requireContext())
+        val viewModel: FavoriteViewModel by viewModels { factory }
+        viewModel.getAllFavorites()
     }
 
     override fun onDestroyView() {

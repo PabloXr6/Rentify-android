@@ -6,9 +6,9 @@ import androidx.room.PrimaryKey
 @Entity(tableName = "favorite_vehicles")
 data class VehicleEntity(
     @PrimaryKey
-    val id: Int,
+    val id: String,
     val name: String,
-    val price: Int,
+    val price: String,
     val rating: String,
     val imageUrl: String
 )
