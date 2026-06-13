@@ -109,6 +109,27 @@
 
         <View android:layout_width="match_parent" android:layout_height="1dp" android:background="#EEEEEE" />
 
+        <!-- Tombol Admin Panel — hanya muncul jika login sebagai admin -->
+        <TextView
+            android:id="@+id/tv_menu_admin_panel"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingVertical="16dp"
+            android:text="⚙️ Admin Panel"
+            android:textColor="#4867D4"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            android:visibility="gone"
+            app:drawableEndCompat="@android:drawable/ic_menu_manage"
+            app:drawableTint="#4867D4" />
+
+        <View
+            android:id="@+id/divider_admin"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="#EEEEEE"
+            android:visibility="gone" />
+
         <com.google.android.material.button.MaterialButton
             android:id="@+id/btn_logout"
             android:layout_width="match_parent"

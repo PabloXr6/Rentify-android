@@ -13,6 +13,14 @@ import com.example.rentify.databinding.ItemVehicleBinding
 
 class VehicleAdapter : ListAdapter<Vehicle, VehicleAdapter.VehicleViewHolder>(DiffCallback()) {
 
+    var onFavoriteClick: ((Vehicle, Boolean) -> Unit)? = null
+    private var favoriteIds: Set<String> = emptySet()
+
+    fun setFavoriteIds(ids: Set<String>) {
+        favoriteIds = ids
+        notifyDataSetChanged()
+    }
+
     inner class VehicleViewHolder(private val binding: ItemVehicleBinding) :
         RecyclerView.ViewHolder(binding.root) {
 
@@ -27,6 +35,17 @@ class VehicleAdapter : ListAdapter<Vehicle, VehicleAdapter.VehicleViewHolder>(Di
                         .load(car.imageUrl)
                         .centerCrop()
                         .into(binding.ivCar)
+
+            val isFav = favoriteIds.contains(car.id)
+            if (isFav) {
+                binding.ivFavorite.setColorFilter(android.graphics.Color.parseColor("#F44336"))
+            } else {
+                binding.ivFavorite.setColorFilter(android.graphics.Color.parseColor("#BDBDBD"))
+            }
+
+            binding.cvFavorite.setOnClickListener {
+                onFavoriteClick?.invoke(car, isFav)
+            }
 
             binding.root.setOnClickListener {
                 val bundle = android.os.Bundle().apply {

@@ -5,7 +5,9 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import com.example.rentify.data.local.RentifyDatabase
 import com.example.rentify.data.pref.UserPreferences
+import com.example.rentify.data.repository.AdminRepository
 import com.example.rentify.data.repository.VehicleRepository
+import com.example.rentify.ui.admin.AdminViewModel
 import com.example.rentify.ui.auth.AuthViewModel
 import com.example.rentify.ui.favorites.FavoriteViewModel
 import com.example.rentify.ui.home.HomeViewModel
@@ -28,6 +30,9 @@ class ViewModelFactory(
             modelClass.isAssignableFrom(FavoriteViewModel::class.java) -> {
                 val database = RentifyDatabase.getDatabase(context)
                 FavoriteViewModel(database.favoriteVehicleDao()) as T
+            }
+            modelClass.isAssignableFrom(AdminViewModel::class.java) -> {
+                AdminViewModel(AdminRepository()) as T
             }
             else -> throw IllegalArgumentException("Unknown ViewModel class: " + modelClass.name)
         }

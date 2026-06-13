@@ -37,9 +37,22 @@ class ProfileFragment : Fragment() {
         // Tampilkan nama dari UserPreferences & email dari Firebase Auth
         val userPrefs = UserPreferences(requireContext())
         val currentUser = FirebaseAuth.getInstance().currentUser
+        val loggedInEmail = userPrefs.getEmail() ?: currentUser?.email ?: ""
 
         binding.tvProfileName.text = userPrefs.getUsername() ?: currentUser?.displayName ?: "Pengguna"
-        binding.tvProfileEmail.text = currentUser?.email ?: "-"
+        binding.tvProfileEmail.text = if (loggedInEmail.isNotEmpty()) loggedInEmail else "-"
+
+        // Tampilkan tombol Admin Panel jika email adalah admin
+        val adminEmail = "admin@rentify.com" // ganti sesuai email admin
+        if (loggedInEmail == adminEmail) {
+            binding.tvMenuAdminPanel.visibility = View.VISIBLE
+            binding.dividerAdmin.visibility = View.VISIBLE
+        }
+
+        // Navigasi ke Admin Panel
+        binding.tvMenuAdminPanel.setOnClickListener {
+            findNavController().navigate(R.id.adminDashboardFragment)
+        }
 
         // Navigasi ke Edit Profile
         binding.tvMenuEditProfile.setOnClickListener {

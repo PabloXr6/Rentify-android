@@ -69,4 +69,25 @@
         android:name="com.example.rentify.ui.auth.SignUpFragment"
         android:label="Sign Up" />
 
+    <!-- Admin Panel -->
+    <fragment
+        android:id="@+id/adminDashboardFragment"
+        android:name="com.example.rentify.ui.admin.AdminDashboardFragment"
+        android:label="Admin Panel" />
+
+    <fragment
+        android:id="@+id/adminAddVehicleFragment"
+        android:name="com.example.rentify.ui.admin.AdminAddVehicleFragment"
+        android:label="Tambah Kendaraan" />
+
+    <fragment
+        android:id="@+id/adminOrdersFragment"
+        android:name="com.example.rentify.ui.admin.AdminOrdersFragment"
+        android:label="Kelola Pesanan" />
+
+    <fragment
+        android:id="@+id/adminReviewsFragment"
+        android:name="com.example.rentify.ui.admin.AdminReviewsFragment"
+        android:label="Kelola Ulasan" />
+
 </navigation>
