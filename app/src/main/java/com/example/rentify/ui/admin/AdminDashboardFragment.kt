@@ -33,13 +33,10 @@ class AdminDashboardFragment : Fragment() {
             findNavController().navigate(R.id.adminAddVehicleFragment)
         }
 
-        binding.cardManageOrders.setOnClickListener {
-            findNavController().navigate(R.id.adminOrdersFragment)
+        binding.cardManageShowroom.setOnClickListener {
+            findNavController().navigate(R.id.adminShowroomFragment)
         }
 
-        binding.cardManageReviews.setOnClickListener {
-            findNavController().navigate(R.id.adminReviewsFragment)
-        }
     }
 
     override fun onDestroyView() {

@@ -81,13 +81,8 @@
         android:label="Tambah Kendaraan" />
 
     <fragment
-        android:id="@+id/adminOrdersFragment"
-        android:name="com.example.rentify.ui.admin.AdminOrdersFragment"
-        android:label="Kelola Pesanan" />
-
-    <fragment
-        android:id="@+id/adminReviewsFragment"
-        android:name="com.example.rentify.ui.admin.AdminReviewsFragment"
-        android:label="Kelola Ulasan" />
+        android:id="@+id/adminShowroomFragment"
+        android:name="com.example.rentify.ui.admin.AdminShowroomFragment"
+        android:label="Kelola Showroom" />
 
 </navigation>

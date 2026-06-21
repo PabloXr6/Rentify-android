@@ -4,8 +4,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.rentify.data.remote.Order
-import com.example.rentify.data.remote.Review
+import com.example.rentify.data.remote.Showroom
 import com.example.rentify.data.remote.Vehicle
 import com.example.rentify.data.repository.AdminRepository
 import kotlinx.coroutines.launch
@@ -22,11 +21,8 @@ class AdminViewModel(private val repository: AdminRepository) : ViewModel() {
     private val _state = MutableLiveData<AdminState>(AdminState.Idle)
     val state: LiveData<AdminState> get() = _state
 
-    private val _orders = MutableLiveData<List<Order>>()
-    val orders: LiveData<List<Order>> get() = _orders
-
-    private val _reviews = MutableLiveData<List<Review>>()
-    val reviews: LiveData<List<Review>> get() = _reviews
+    private val _showroom = MutableLiveData<Showroom>()
+    val showroom: LiveData<Showroom> get() = _showroom
 
     // ----------------------------------------------------------------
     // VEHICLE
@@ -55,56 +51,29 @@ class AdminViewModel(private val repository: AdminRepository) : ViewModel() {
         }
     }
 
+
     // ----------------------------------------------------------------
-    // ORDERS
+    // SHOWROOM
     // ----------------------------------------------------------------
-    fun loadAllOrders() {
+    fun loadShowroom() {
+        viewModelScope.launch {
+            try {
+                val result = repository.getShowroom()
+                _showroom.value = result
+            } catch (e: Exception) {
+                _state.value = AdminState.Error(e.message ?: "Gagal memuat data showroom")
+            }
+        }
+    }
+
+    fun updateShowroom(showroom: Showroom) {
         _state.value = AdminState.Loading
         viewModelScope.launch {
             try {
-                val result = repository.getAllOrders()
-                _orders.value = result
-                _state.value = AdminState.Idle
+                val success = repository.updateShowroom(showroom)
+                _state.value = if (success) AdminState.Success else AdminState.Error("Gagal menyimpan showroom")
             } catch (e: Exception) {
-                _state.value = AdminState.Error(e.message ?: "Gagal memuat pesanan")
-            }
-        }
-    }
-
-    fun updateOrderStatus(orderId: String, status: String) {
-        viewModelScope.launch {
-            try {
-                repository.updateOrderStatus(orderId, status)
-                loadAllOrders() // refresh list
-            } catch (e: Exception) {
-                _state.value = AdminState.Error(e.message ?: "Gagal update status")
-            }
-        }
-    }
-
-    // ----------------------------------------------------------------
-    // REVIEWS
-    // ----------------------------------------------------------------
-    fun loadAllReviews() {
-        _state.value = AdminState.Loading
-        viewModelScope.launch {
-            try {
-                val result = repository.getAllReviews()
-                _reviews.value = result
-                _state.value = AdminState.Idle
-            } catch (e: Exception) {
-                _state.value = AdminState.Error(e.message ?: "Gagal memuat ulasan")
-            }
-        }
-    }
-
-    fun deleteReview(reviewId: String) {
-        viewModelScope.launch {
-            try {
-                repository.deleteReview(reviewId)
-                loadAllReviews() // refresh list
-            } catch (e: Exception) {
-                _state.value = AdminState.Error(e.message ?: "Gagal menghapus ulasan")
+                _state.value = AdminState.Error(e.message ?: "Terjadi kesalahan")
             }
         }
     }
