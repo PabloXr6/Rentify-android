@@ -8,5 +8,7 @@ data class Vehicle(
     val imageUrl: String = "",
     val transmission: String = "",
     val seats: String = "",
-    val category: String = ""
+    val category: String = "",
+    val showroomId: String = "",
+    val showroomName: String = ""
 )

@@ -21,12 +21,12 @@ class FavoriteAdapter : ListAdapter<VehicleEntity, FavoriteAdapter.FavoriteViewH
             binding.tvCarName.text = car.name
             binding.tvCarPrice.text = car.price
             binding.tvRating.text = car.rating
-            binding.tvTransmission.text = "" 
-            binding.tvSeats.text = ""
+            binding.tvTransmission.text = car.transmission
+            binding.tvSeats.text = if (car.seats.contains("Seat", ignoreCase = true)) car.seats else "${car.seats} Seats"
 
             Glide.with(binding.root.context)
                 .load(car.imageUrl)
-                .centerCrop()
+                .fitCenter()
                 .into(binding.ivCar)
 
             binding.root.setOnClickListener {
@@ -36,9 +36,10 @@ class FavoriteAdapter : ListAdapter<VehicleEntity, FavoriteAdapter.FavoriteViewH
                     putString("price", car.price)
                     putString("rating", car.rating)
                     putString("imageUrl", car.imageUrl)
-                    putString("transmission", "")
-                    putString("seats", "")
-                    putString("category", "")
+                    putString("transmission", car.transmission)
+                    putString("seats", car.seats)
+                    putString("category", car.category)
+                    putString("showroomId", car.showroomId)
                 }
                 it.findNavController().navigate(R.id.detailVehicleFragment, bundle)
             }

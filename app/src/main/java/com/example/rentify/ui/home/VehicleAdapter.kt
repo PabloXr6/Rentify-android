@@ -29,12 +29,12 @@ class VehicleAdapter : ListAdapter<Vehicle, VehicleAdapter.VehicleViewHolder>(Di
             binding.tvCarPrice.text = car.price
             binding.tvRating.text = car.rating
             binding.tvTransmission.text = car.transmission
-            binding.tvSeats.text = car.seats
+            binding.tvSeats.text = if (car.seats.contains("Seat", ignoreCase = true)) car.seats else "${car.seats} Seats"
 
-                    Glide.with(binding.root.context)
-                        .load(car.imageUrl)
-                        .centerCrop()
-                        .into(binding.ivCar)
+            Glide.with(binding.root.context)
+                .load(car.imageUrl)
+                .fitCenter() // Ubah dari .centerCrop() menjadi .fitCenter()
+                .into(binding.ivCar)
 
             val isFav = favoriteIds.contains(car.id)
             if (isFav) {
@@ -57,6 +57,9 @@ class VehicleAdapter : ListAdapter<Vehicle, VehicleAdapter.VehicleViewHolder>(Di
                     putString("transmission", car.transmission)
                     putString("seats", car.seats)
                     putString("category", car.category)
+
+                    // INI DIA YANG KETINGGALAN!
+                    putString("showroomId", car.showroomId)
                 }
                 it.findNavController().navigate(R.id.detailVehicleFragment, bundle)
             }

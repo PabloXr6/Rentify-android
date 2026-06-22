@@ -17,6 +17,10 @@ class FavoritesFragment : Fragment() {
 
     private lateinit var favoriteAdapter: FavoriteAdapter
 
+    private val viewModel: FavoriteViewModel by viewModels {
+        ViewModelFactory.getInstance(requireContext())
+    }
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -28,26 +32,20 @@ class FavoritesFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        val factory = ViewModelFactory.getInstance(requireContext())
-        val viewModel: FavoriteViewModel by viewModels { factory }
-
         favoriteAdapter = FavoriteAdapter()
         binding.rvFavorites.apply {
             layoutManager = LinearLayoutManager(requireContext())
             adapter = favoriteAdapter
         }
 
+        // Observasi data favorit
         viewModel.favoritesList.observe(viewLifecycleOwner) { favorites ->
             favoriteAdapter.submitList(favorites)
         }
-
-        viewModel.getAllFavorites()
     }
 
     override fun onResume() {
         super.onResume()
-        val factory = ViewModelFactory.getInstance(requireContext())
-        val viewModel: FavoriteViewModel by viewModels { factory }
         viewModel.getAllFavorites()
     }
 

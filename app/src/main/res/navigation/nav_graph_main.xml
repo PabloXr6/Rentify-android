@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <navigation xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/nav_graph_main"
     app:startDestination="@id/splashFragment">
 
@@ -84,5 +85,17 @@
         android:id="@+id/adminShowroomFragment"
         android:name="com.example.rentify.ui.admin.AdminShowroomFragment"
         android:label="Kelola Showroom" />
+
+    <fragment
+        android:id="@+id/adminManageVehiclesFragment"
+        android:name="com.example.rentify.ui.admin.AdminManageVehiclesFragment"
+        android:label="Kelola Kendaraan"
+        tools:layout="@layout/fragment_admin_manage_vehicles" />
+
+    <fragment
+        android:id="@+id/adminManageShowroomsFragment"
+        android:name="com.example.rentify.ui.admin.AdminManageShowroomsFragment"
+        android:label="Kelola Showroom"
+        tools:layout="@layout/fragment_admin_manage_showrooms" />
 
 </navigation>

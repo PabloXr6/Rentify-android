@@ -21,6 +21,10 @@ class AdminShowroomFragment : Fragment() {
         ViewModelFactory.getInstance(requireContext())
     }
 
+    // Variabel penanda Mode Edit
+    private var isEditMode = false
+    private var showroomId = ""
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -32,23 +36,46 @@ class AdminShowroomFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        // Cek apakah ada data kiriman (Berarti Mode Edit!)
+        arguments?.let {
+            if (it.containsKey("id")) {
+                isEditMode = true
+                showroomId = it.getString("id") ?: ""
+
+                // Tempel data lama ke form
+                binding.etShowroomName.setText(it.getString("name"))
+                binding.etShowroomPhone.setText(it.getString("phone"))
+                binding.etShowroomDesc.setText(it.getString("description"))
+
+                binding.btnSaveShowroom.text = "Perbarui Showroom"
+            }
+        }
+
         binding.btnBackShowroom.setOnClickListener {
             findNavController().navigateUp()
         }
 
-        // Muat data showroom saat ini
-        viewModel.loadShowroom()
+        binding.btnSaveShowroom.setOnClickListener {
+            val name = binding.etShowroomName.text.toString().trim()
+            val phone = binding.etShowroomPhone.text.toString().trim()
+            val desc = binding.etShowroomDesc.text.toString().trim()
 
-        // Isi form dengan data yang ada
-        viewModel.showroom.observe(viewLifecycleOwner) { showroom ->
-            binding.etShowroomName.setText(showroom.name)
-            binding.etShowroomAddress.setText(showroom.address)
-            binding.etShowroomPhone.setText(showroom.phone)
-            binding.etShowroomHours.setText(showroom.openHours)
-            binding.etShowroomDesc.setText(showroom.description)
+            if (name.isEmpty() || phone.isEmpty() || desc.isEmpty()) {
+                Toast.makeText(requireContext(), "Semua kolom wajib diisi!", Toast.LENGTH_SHORT).show()
+                return@setOnClickListener
+            }
+
+            // Kalau mode Edit, ID lama dipakai. Kalau Tambah baru, ID-nya kosong
+            val updatedShowroom = Showroom(
+                id = showroomId,
+                name = name,
+                phone = phone,
+                description = desc
+            )
+
+            viewModel.updateShowroom(updatedShowroom)
         }
 
-        // Observer state (loading/sukses/error)
         viewModel.state.observe(viewLifecycleOwner) { state ->
             when (state) {
                 is AdminState.Loading -> {
@@ -56,52 +83,21 @@ class AdminShowroomFragment : Fragment() {
                     binding.btnSaveShowroom.text = "Menyimpan..."
                 }
                 is AdminState.Success -> {
-                    binding.btnSaveShowroom.isEnabled = true
-                    binding.btnSaveShowroom.text = "Simpan Informasi Showroom"
-                    Toast.makeText(requireContext(), "✅ Informasi showroom berhasil disimpan!", Toast.LENGTH_SHORT).show()
+                    val msg = if (isEditMode) "Showroom berhasil diperbarui!" else "Showroom baru berhasil didaftarkan!"
+                    Toast.makeText(requireContext(), msg, Toast.LENGTH_SHORT).show()
                     viewModel.resetState()
+                    findNavController().navigateUp()
                 }
                 is AdminState.Error -> {
                     binding.btnSaveShowroom.isEnabled = true
-                    binding.btnSaveShowroom.text = "Simpan Informasi Showroom"
-                    Toast.makeText(requireContext(), "❌ ${state.message}", Toast.LENGTH_SHORT).show()
+                    binding.btnSaveShowroom.text = if (isEditMode) "Perbarui Showroom" else "Simpan Informasi Showroom"
+                    Toast.makeText(requireContext(), state.message, Toast.LENGTH_SHORT).show()
                     viewModel.resetState()
                 }
                 else -> {
                     binding.btnSaveShowroom.isEnabled = true
-                    binding.btnSaveShowroom.text = "Simpan Informasi Showroom"
                 }
             }
-        }
-
-        // Simpan showroom
-        binding.btnSaveShowroom.setOnClickListener {
-            val name = binding.etShowroomName.text.toString().trim()
-            val address = binding.etShowroomAddress.text.toString().trim()
-            val phone = binding.etShowroomPhone.text.toString().trim()
-            val hours = binding.etShowroomHours.text.toString().trim()
-            val desc = binding.etShowroomDesc.text.toString().trim()
-
-            if (name.isEmpty()) {
-                binding.tilShowroomName.error = "Nama showroom tidak boleh kosong"
-                return@setOnClickListener
-            }
-            binding.tilShowroomName.error = null
-
-            if (phone.isEmpty()) {
-                binding.tilShowroomPhone.error = "Nomor WhatsApp tidak boleh kosong"
-                return@setOnClickListener
-            }
-            binding.tilShowroomPhone.error = null
-
-            val showroom = Showroom(
-                name = name,
-                address = address,
-                phone = phone,
-                openHours = hours,
-                description = desc
-            )
-            viewModel.updateShowroom(showroom)
         }
     }
 

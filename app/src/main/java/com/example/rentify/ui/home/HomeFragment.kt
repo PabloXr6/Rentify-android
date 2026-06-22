@@ -21,6 +21,11 @@ class HomeFragment : Fragment() {
     private lateinit var vehicleAdapter: VehicleAdapter
     private lateinit var favoriteViewModel: FavoriteViewModel
 
+    // 1. PINDAHKAN VIEW MODEL KE SINI AGAR BISA DIAKSES DI SELURUH BAGIAN FRAGMENT
+    private val viewModel: HomeViewModel by viewModels {
+        ViewModelFactory.getInstance(requireContext())
+    }
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -32,9 +37,8 @@ class HomeFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        // Setup ViewModel
+        // Setup Favorite ViewModel
         val factory = ViewModelFactory.getInstance(requireContext())
-        val viewModel: HomeViewModel by viewModels { factory }
         favoriteViewModel = androidx.lifecycle.ViewModelProvider(this, factory)[FavoriteViewModel::class.java]
 
         // Set username dari preferences
@@ -73,9 +77,6 @@ class HomeFragment : Fragment() {
             binding.tvRecommendationTitle.text = "$category Recommendation"
         }
 
-        // Ambil data kendaraan
-        viewModel.fetchVehicles()
-
         // Logika Tombol Filter
         binding.btnCars.setOnClickListener {
             viewModel.filterVehicles("Car")
@@ -94,7 +95,11 @@ class HomeFragment : Fragment() {
                 name = vehicle.name,
                 price = vehicle.price,
                 rating = vehicle.rating,
-                imageUrl = vehicle.imageUrl
+                imageUrl = vehicle.imageUrl,
+                transmission = vehicle.transmission,
+                seats = vehicle.seats,
+                category = vehicle.category,
+                showroomId = vehicle.showroomId
             )
             if (isFav) {
                 favoriteViewModel.removeFavorite(entity)
@@ -105,20 +110,19 @@ class HomeFragment : Fragment() {
             }
         }
         binding.rvVehicles.apply {
-            layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
+            layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false)
             adapter = vehicleAdapter
         }
     }
 
+    // 2. FUNGSI INI AKAN SELALU JALAN SAAT TAB HOME DIBUKA
     override fun onResume() {
         super.onResume()
+        // Pastikan data diambil ulang setiap kali halaman Home tampil kembali
+        viewModel.fetchVehicles()
+
         if (::favoriteViewModel.isInitialized) {
             favoriteViewModel.getAllFavorites()
         }
-    }
-
-    override fun onDestroyView() {
-        super.onDestroyView()
-        _binding = null
     }
 }

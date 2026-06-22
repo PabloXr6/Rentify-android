@@ -15,12 +15,15 @@ import com.example.rentify.R
 import com.example.rentify.data.local.VehicleEntity
 import com.example.rentify.databinding.FragmentDetailVehicleBinding
 import com.example.rentify.ui.ViewModelFactory
+import com.example.rentify.ui.admin.AdminViewModel
 import com.example.rentify.ui.favorites.FavoriteViewModel
 
 class DetailVehicleFragment : Fragment() {
 
     private var _binding: FragmentDetailVehicleBinding? = null
     private val binding get() = _binding!!
+
+    private var showroomPhone: String = "6283142646621"
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -33,33 +36,74 @@ class DetailVehicleFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        // Menerima data dari Bundle
+        val factory = ViewModelFactory.getInstance(requireContext())
+        val favoriteViewModel: FavoriteViewModel by viewModels { factory }
+
+        val adminViewModel: AdminViewModel by viewModels { factory }
+
         val id = arguments?.getString("id") ?: ""
         val name = arguments?.getString("name") ?: ""
         val price = arguments?.getString("price") ?: ""
         val rating = arguments?.getString("rating") ?: ""
         val imageUrl = arguments?.getString("imageUrl") ?: ""
+        val transmission = arguments?.getString("transmission") ?: ""
+        val seats = arguments?.getString("seats") ?: ""
+        val showroomId = arguments?.getString("showroomId") ?: ""
+        val category = arguments?.getString("category") ?: ""
 
-        // Tampilkan data ke UI
         binding.tvCarName.text = name
         binding.tvRating.text = rating
-        binding.tvPriceValue.text = price.substringBefore(" /") 
+        binding.tvPriceValue.text = price.substringBefore(" /")
+
+        binding.tvDetailCategory.text = category
+        binding.tvDetailTransmission.text = transmission
+        binding.tvDetailSeats.text = if (seats.contains("Seat")) seats else "$seats Seats"
+
+        if (category.equals("Motorcycle", ignoreCase = true)) {
+            binding.tvHeaderTitle.text = "Motorcycle Details"
+            binding.ivDetailCategoryIcon.setImageResource(R.drawable.ic_motorcycle)
+        } else {
+            binding.tvHeaderTitle.text = "Car Details"
+            binding.ivDetailCategoryIcon.setImageResource(R.drawable.ic_car) 
+        }
 
         Glide.with(this)
             .load(imageUrl)
-            .centerInside()
+            .centerCrop()
             .placeholder(android.R.drawable.ic_menu_gallery)
+            .error(android.R.drawable.ic_menu_report_image)
             .into(binding.ivCarDetail)
 
-        // Setup ViewModel untuk Favorites (Room)
-        val factory = ViewModelFactory.getInstance(requireContext())
-        val viewModel: FavoriteViewModel by viewModels { factory }
+        // 1. Ambil data dari Firebase berdasarkan ID showroom mobil ini
+        if (showroomId.isNotEmpty()) {
+            adminViewModel.loadShowroomById(showroomId)
+        } else {
+            // Jika ID kosong, coba ambil data showroom utama sebagai fallback
+            adminViewModel.loadShowrooms()
+        }
 
-        // Cek status favorite
-        viewModel.checkIsFavorite(id)
+        adminViewModel.singleShowroom.observe(viewLifecycleOwner) { showroom ->
+            if (showroom != null && showroom.name.isNotEmpty()) {
+                showroomPhone = showroom.phone
+                binding.tvPartnerName.text = showroom.name
+                binding.tvAboutDesc.text = showroom.description
+            }
+        }
+
+        // Jika loadShowrooms (list) terpanggil, ambil item pertama
+        adminViewModel.showrooms.observe(viewLifecycleOwner) { showrooms ->
+            if (showroomId.isEmpty() && showrooms.isNotEmpty()) {
+                val showroom = showrooms[0]
+                showroomPhone = showroom.phone
+                binding.tvPartnerName.text = showroom.name
+                binding.tvAboutDesc.text = showroom.description
+            }
+        }
+
+        favoriteViewModel.checkIsFavorite(id)
 
         var isFav = false
-        viewModel.isFavorite.observe(viewLifecycleOwner) { favorite ->
+        favoriteViewModel.isFavorite.observe(viewLifecycleOwner) { favorite ->
             isFav = favorite
             if (favorite) {
                 binding.btnFavorite.setColorFilter(android.graphics.Color.parseColor("#F44336"))
@@ -73,36 +117,40 @@ class DetailVehicleFragment : Fragment() {
                 Toast.makeText(requireContext(), "Data kendaraan tidak valid", Toast.LENGTH_SHORT).show()
                 return@setOnClickListener
             }
+
+            // Masukkan SEMUA data ke dalam entity, jangan ada yang tertinggal!
             val entity = VehicleEntity(
                 id = id,
                 name = name,
                 price = price,
                 rating = rating,
-                imageUrl = imageUrl
+                imageUrl = imageUrl,
+                transmission = transmission,
+                seats = seats,
+                category = category,         // (Pastikan kamu sudah membuat val category = arguments?.getString("category") ?: "" di bagian atas ya)
+                showroomId = showroomId
             )
+
             if (isFav) {
-                viewModel.removeFavorite(entity)
+                favoriteViewModel.removeFavorite(entity)
                 Toast.makeText(requireContext(), "Dihapus dari Favorit", Toast.LENGTH_SHORT).show()
             } else {
-                viewModel.addFavorite(entity)
+                favoriteViewModel.addFavorite(entity)
                 Toast.makeText(requireContext(), "Ditambahkan ke Favorit", Toast.LENGTH_SHORT).show()
             }
         }
 
-        // 1. Logika Tombol Back
         binding.btnBack.setOnClickListener {
             findNavController().navigateUp()
         }
 
-        // 2. Logika Tombol Booking Now (Direct ke WhatsApp)
         binding.btnBookingNow.setOnClickListener {
-            directToWhatsApp(name)
+            directToWhatsApp(name, showroomPhone)
         }
     }
 
-    private fun directToWhatsApp(carName: String) {
-        val phoneNumber = "6283142646621"
-        val message = "Halo Lombok Car Transport, saya tertarik menyewa kendaraan $carName dari aplikasi Rentify. Apakah unitnya tersedia?"
+    private fun directToWhatsApp(carName: String, phoneNumber: String) {
+        val message = "Halo, saya tertarik menyewa kendaraan $carName dari aplikasi Rentify. Apakah unitnya tersedia?"
         val url = "https://api.whatsapp.com/send?phone=$phoneNumber&text=${Uri.encode(message)}"
 
         try {

@@ -57,18 +57,15 @@
                 android:layout_width="14dp"
                 android:layout_height="14dp"
                 android:layout_gravity="center"
-                android:src="@android:drawable/ic_menu_myplaces"
+                android:src="@drawable/ic_favorite"
                 app:tint="#F44336" />
         </com.google.android.material.card.MaterialCardView>
 
         <ImageView
             android:id="@+id/iv_car"
-            android:layout_width="0dp"
-            android:layout_height="110dp"
-            android:layout_marginTop="8dp"
-            android:scaleType="centerInside"
-            android:src="@android:drawable/ic_menu_gallery"
-            app:layout_constraintEnd_toEndOf="parent"
+            android:layout_width="match_parent"
+            android:layout_height="150dp" android:layout_marginTop="8dp"
+            android:scaleType="fitCenter" app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/ll_rating" />
 
@@ -107,8 +104,8 @@
             android:id="@+id/ll_transmission"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:gravity="center_vertical"
-            android:orientation="horizontal"
+            android:gravity="center_horizontal"
+            android:orientation="vertical"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@id/ll_seats"
             app:layout_constraintStart_toEndOf="@id/tv_car_name"
@@ -117,25 +114,25 @@
             <ImageView
                 android:layout_width="16dp"
                 android:layout_height="16dp"
-                android:src="@android:drawable/ic_menu_manage"
+                android:src="@drawable/ic_transmission"
                 app:tint="#4867D4" />
 
             <TextView
                 android:id="@+id/tv_transmission"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="4dp"
-                tools:text="Manual"
+                android:layout_marginTop="2dp"
                 android:textColor="#9E9E9E"
-                android:textSize="12sp" />
+                android:textSize="10sp"
+                tools:text="Manual" />
         </LinearLayout>
 
         <LinearLayout
             android:id="@+id/ll_seats"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:gravity="center_vertical"
-            android:orientation="horizontal"
+            android:gravity="center_horizontal"
+            android:orientation="vertical"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="@id/tv_car_name">
@@ -143,17 +140,17 @@
             <ImageView
                 android:layout_width="16dp"
                 android:layout_height="16dp"
-                android:src="@android:drawable/ic_menu_myplaces"
+                android:src="@drawable/ic_seat"
                 app:tint="#4867D4" />
 
             <TextView
                 android:id="@+id/tv_seats"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="4dp"
-                tools:text="6 Seats"
+                android:layout_marginTop="2dp"
                 android:textColor="#9E9E9E"
-                android:textSize="12sp" />
+                android:textSize="10sp"
+                tools:text="6 Seats" />
         </LinearLayout>
 
     </androidx.constraintlayout.widget.ConstraintLayout>

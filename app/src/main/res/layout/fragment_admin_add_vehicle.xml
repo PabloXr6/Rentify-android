@@ -1,9 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#F8F9FA">
+    android:background="#F8F9FA"
+    tools:context=".ui.admin.AdminAddVehicleFragment">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -15,14 +17,15 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@drawable/bg_header_rounded"
-            android:paddingHorizontal="20dp"
-            android:paddingVertical="16dp">
+            android:paddingStart="20dp"
+            android:paddingEnd="20dp"
+            android:paddingTop="40dp"
+            android:paddingBottom="16dp">
 
-            <ImageView
+            <androidx.appcompat.widget.AppCompatImageView
                 android:id="@+id/btn_back_add_vehicle"
                 android:layout_width="32dp"
                 android:layout_height="32dp"
-                android:layout_marginTop="24dp"
                 android:background="?attr/selectableItemBackgroundBorderless"
                 android:padding="4dp"
                 android:src="@drawable/ic_arrow_back"
@@ -34,7 +37,6 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="24dp"
                 android:text="Tambah Kendaraan"
                 android:textColor="@android:color/white"
                 android:textSize="18sp"
@@ -55,7 +57,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
-                android:paddingHorizontal="24dp"
+                android:paddingStart="24dp"
+                android:paddingEnd="24dp"
                 android:paddingTop="20dp"
                 android:paddingBottom="40dp">
 
@@ -113,24 +116,48 @@
                         android:textSize="15sp" />
                 </com.google.android.material.textfield.TextInputLayout>
 
-                <!-- Kategori -->
+                <!-- Pilih Showroom (Dropdown) -->
                 <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/til_vehicle_showroom"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginBottom="24dp"
-                    android:hint="Kategori (Car / Motorcycle)"
-                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                    android:layout_marginBottom="16dp"
+                    android:hint="Pilih Showroom"
+                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
                     app:boxStrokeColor="#4867D4"
                     app:boxCornerRadiusTopStart="12dp"
                     app:boxCornerRadiusTopEnd="12dp"
                     app:boxCornerRadiusBottomStart="12dp"
                     app:boxCornerRadiusBottomEnd="12dp">
 
-                    <com.google.android.material.textfield.TextInputEditText
-                        android:id="@+id/et_vehicle_category"
+                    <com.google.android.material.textfield.MaterialAutoCompleteTextView
+                        android:id="@+id/ac_vehicle_showroom"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:inputType="textCapWords"
+                        android:inputType="none"
+                        android:textColor="#1A1A1A"
+                        android:textSize="15sp" />
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <!-- Kategori (Dropdown) -->
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/til_vehicle_category"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="24dp"
+                    android:hint="Pilih Kategori"
+                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
+                    app:boxStrokeColor="#4867D4"
+                    app:boxCornerRadiusTopStart="12dp"
+                    app:boxCornerRadiusTopEnd="12dp"
+                    app:boxCornerRadiusBottomStart="12dp"
+                    app:boxCornerRadiusBottomEnd="12dp">
+
+                    <com.google.android.material.textfield.MaterialAutoCompleteTextView
+                        android:id="@+id/ac_vehicle_category"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:inputType="none"
                         android:textColor="#1A1A1A"
                         android:textSize="15sp" />
                 </com.google.android.material.textfield.TextInputLayout>
@@ -145,24 +172,25 @@
                     android:textStyle="bold"
                     android:layout_marginBottom="12dp" />
 
-                <!-- Transmisi -->
+                <!-- Transmisi (Dropdown) -->
                 <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/til_vehicle_transmission"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="16dp"
-                    android:hint="Transmisi (Manual / Automatic)"
-                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                    android:hint="Pilih Transmisi"
+                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
                     app:boxStrokeColor="#4867D4"
                     app:boxCornerRadiusTopStart="12dp"
                     app:boxCornerRadiusTopEnd="12dp"
                     app:boxCornerRadiusBottomStart="12dp"
                     app:boxCornerRadiusBottomEnd="12dp">
 
-                    <com.google.android.material.textfield.TextInputEditText
-                        android:id="@+id/et_vehicle_transmission"
+                    <com.google.android.material.textfield.MaterialAutoCompleteTextView
+                        android:id="@+id/ac_vehicle_transmission"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:inputType="textCapWords"
+                        android:inputType="none"
                         android:textColor="#1A1A1A"
                         android:textSize="15sp" />
                 </com.google.android.material.textfield.TextInputLayout>
@@ -207,6 +235,30 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:inputType="textUri"
+                        android:textColor="#1A1A1A"
+                        android:textSize="15sp" />
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <!-- Rating Kendaraan -->
+                <com.google.android.material.textfield.TextInputLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="32dp"
+                    android:hint="Rating Kendaraan (Contoh: 4.8)"
+                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                    app:boxStrokeColor="#4867D4"
+                    app:boxCornerRadiusTopStart="12dp"
+                    app:boxCornerRadiusTopEnd="12dp"
+                    app:boxCornerRadiusBottomStart="12dp"
+                    app:boxCornerRadiusBottomEnd="12dp"
+                    app:startIconDrawable="@android:drawable/btn_star_big_on"
+                    app:startIconTint="#FFB400">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/et_vehicle_rating"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:inputType="numberDecimal"
                         android:textColor="#1A1A1A"
                         android:textSize="15sp" />
                 </com.google.android.material.textfield.TextInputLayout>
