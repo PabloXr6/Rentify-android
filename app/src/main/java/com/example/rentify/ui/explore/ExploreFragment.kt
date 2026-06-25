@@ -4,7 +4,9 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.rentify.databinding.FragmentExploreBinding
 
@@ -14,6 +16,9 @@ class ExploreFragment : Fragment() {
     private val binding get() = _binding!!
 
     private lateinit var articleAdapter: ArticleAdapter
+
+    // Menyambungkan Fragment dengan ViewModel
+    private val viewModel: ExploreViewModel by viewModels()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -27,7 +32,23 @@ class ExploreFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         setupRecyclerView()
-        loadDummyArticles()
+
+        // Mengamati perubahan data dari ViewModel
+        viewModel.exploreState.observe(viewLifecycleOwner) { state ->
+            when (state) {
+                is ExploreState.Loading -> {
+                    // Status loading (bisa diabaikan sementara)
+                }
+                is ExploreState.Success -> {
+                    // Jika sukses, masukkan daftar artikel ke dalam Adapter
+                    articleAdapter.submitList(state.articles)
+                }
+                is ExploreState.Error -> {
+                    // Jika gagal/error internet, tampilkan peringatan
+                    Toast.makeText(requireContext(), "Gagal: ${state.exception.message}", Toast.LENGTH_SHORT).show()
+                }
+            }
+        }
     }
 
     private fun setupRecyclerView() {
@@ -38,16 +59,10 @@ class ExploreFragment : Fragment() {
         }
     }
 
-    private fun loadDummyArticles() {
-        // Data artikel wisata lokal untuk mengetes UI
-        val dummyList = listOf(
-            DummyArticle(1, "5 Pantai Tersembunyi di Lombok untuk Liburan Tenang", "Destinasi", "28 Mei 2026 • 4 Min Read"),
-            DummyArticle(2, "Tips Menyewa Mobil Matic untuk Keliling Senggigi", "Tips Wisata", "25 Mei 2026 • 3 Min Read"),
-            DummyArticle(3, "Rute Terbaik Menuju Sembalun Menggunakan Motor", "Rute", "20 Mei 2026 • 5 Min Read"),
-            DummyArticle(4, "Daftar Kuliner Khas NTB yang Wajib Dicoba Saat Roadtrip", "Kuliner", "15 Mei 2026 • 6 Min Read")
-        )
-
-        articleAdapter.submitList(dummyList)
+    override fun onResume() {
+        super.onResume()
+        // Perintahkan ViewModel untuk menarik data Firebase setiap kali halaman dibuka
+        viewModel.fetchArticles()
     }
 
     override fun onDestroyView() {

@@ -5,28 +5,24 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
+import com.example.rentify.data.remote.Article
 import com.example.rentify.databinding.ItemArticleBinding
-import androidx.navigation.findNavController
-import com.example.rentify.R
 
-// Data class sementara untuk artikel
-data class DummyArticle(val id: Int, val title: String, val category: String, val date: String)
-
-class ArticleAdapter : ListAdapter<DummyArticle, ArticleAdapter.ArticleViewHolder>(DiffCallback()) {
+class ArticleAdapter : ListAdapter<Article, ArticleAdapter.ArticleViewHolder>(DiffCallback()) {
 
     inner class ArticleViewHolder(private val binding: ItemArticleBinding) :
         RecyclerView.ViewHolder(binding.root) {
 
-        fun bind(article: DummyArticle) {
+        fun bind(article: Article) {
             binding.tvArticleTitle.text = article.title
             binding.tvCategory.text = article.category
-            binding.tvArticleDate.text = article.date
+            binding.tvArticleDate.text = "${article.date} • ${article.readTime}"
 
-            binding.root.setOnClickListener {
-                it.findNavController().navigate(R.id.detailExploreFragment)
-            }
-
-            // Logika klik artikel bisa ditambahkan di sini nantinya
+            Glide.with(itemView.context)
+                .load(article.imageUrl)
+                .centerCrop()
+                .into(binding.  ivArticle)
         }
     }
 
@@ -39,12 +35,12 @@ class ArticleAdapter : ListAdapter<DummyArticle, ArticleAdapter.ArticleViewHolde
         holder.bind(getItem(position))
     }
 
-    class DiffCallback : DiffUtil.ItemCallback<DummyArticle>() {
-        override fun areItemsTheSame(oldItem: DummyArticle, newItem: DummyArticle): Boolean {
-            return oldItem.id == newItem.id
+    class DiffCallback : DiffUtil.ItemCallback<Article>() {
+        override fun areItemsTheSame(oldItem: Article, newItem: Article): Boolean {
+            return oldItem.title == newItem.title
         }
 
-        override fun areContentsTheSame(oldItem: DummyArticle, newItem: DummyArticle): Boolean {
+        override fun areContentsTheSame(oldItem: Article, newItem: Article): Boolean {
             return oldItem == newItem
         }
     }

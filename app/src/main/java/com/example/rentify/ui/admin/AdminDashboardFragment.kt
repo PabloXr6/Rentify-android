@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import com.example.rentify.R
@@ -33,18 +34,22 @@ class AdminDashboardFragment : Fragment() {
             findNavController().navigate(R.id.adminAddVehicleFragment)
         }
 
+        // Tombol Showroom (sudah dirapikan dari yang sebelumnya double)
         binding.cardManageShowroom.setOnClickListener {
-            findNavController().navigate(R.id.adminShowroomFragment)
+            findNavController().navigate(R.id.adminManageShowroomsFragment)
         }
 
         binding.btnManageVehicles.setOnClickListener {
             findNavController().navigate(R.id.adminManageVehiclesFragment)
         }
 
-        binding.cardManageShowroom.setOnClickListener {
-            findNavController().navigate(R.id.adminManageShowroomsFragment)
-        }
+        binding.cardAddArticles.setOnClickListener {
+            findNavController().navigate(R.id.adminAddArticleFragment)
 
+            binding.cardManageArticles.setOnClickListener {
+                findNavController().navigate(R.id.adminManageArticleFragment)
+            }
+        }
     }
 
     override fun onDestroyView() {
